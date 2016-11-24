@@ -25,12 +25,13 @@ class Command
             ->setExpectations([
                 new Validation\Expectation()
             ])
-            ->setArguments([
-                new Validation\Argument('hola')
-            ]);
+            ->setArguments(['tessst']);
 
         $test = new Test();
         $test->setClassname('ToTest\ServiceToTest')
+            ->setDependencies([
+                ['hola']
+            ])
             ->setValidations([$validation])
             ->execute();
 

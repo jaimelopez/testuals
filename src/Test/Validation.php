@@ -12,14 +12,13 @@ namespace Santa\Testuals\Test;
 
 use Santa\Testuals\Test\Validation\Assertion;
 use Santa\Testuals\Test\Validation\Expectation;
-use Santa\Testuals\Test\Validation\Argument;
 
 class Validation
 {
     /** @var string */
     private $method;
 
-    /** @var Argument[] */
+    /** @var array */
     private $arguments;
 
     /** @var Expectation[] */
@@ -48,7 +47,7 @@ class Validation
     }
 
     /**
-     * @return Argument[]
+     * @return array
      */
     public function getArguments()
     {
@@ -56,7 +55,7 @@ class Validation
     }
 
     /**
-     * @param Argument[] $arguments
+     * @param array $arguments
      * @return Validation
      */
     public function setArguments(array $arguments)

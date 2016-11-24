@@ -15,6 +15,7 @@ use Exception;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use ReflectionClass;
+use Santa\Testuals\ObjectAnalyzer;
 use Santa\Testuals\Test;
 
 class Executor extends PHPUnit_Framework_TestCase
@@ -40,7 +41,7 @@ class Executor extends PHPUnit_Framework_TestCase
         }
 
         $this->test = $test;
-        $this->dependencies = $this->generateDependencies($test);
+        $this->dependencies = $this->generateArguments($test->getDependencies());
 
         parent::__construct();
 
@@ -48,22 +49,30 @@ class Executor extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param Test $test
-     * @return PHPUnit_Framework_MockObject_MockObject[]
+     * @param array
+     * @return array|PHPUnit_Framework_MockObject_MockObject[]
      */
-    private function generateDependencies(Test $test)
+    private function generateArguments(array $objects)
     {
-        $dependencies = [];
-
-        if (!$test->getDependencies()) {
+        if (!$objects) {
             return [];
         }
 
-        foreach ($test->getDependencies() as $dependency) {
-            $dependencies[] = $this->createMock($dependency->getClassName());
+        $arguments = [];
+
+        foreach ($objects as $object) {
+            $objectAnalyzer = new ObjectAnalyzer($object);
+
+            if ($objectAnalyzer->isPrimitive()) {
+                $arguments[] = $object;
+
+                continue;
+            }
+
+            $objects[] = $this->createMock(get_class($object));
         }
 
-        return $dependencies;
+        return $objects;
     }
 
     private function execute()
@@ -87,7 +96,7 @@ class Executor extends PHPUnit_Framework_TestCase
 
         $methodName = $validation->getMethod();
         $method = $reflecter->getMethod($methodName);
-        $arguments = $this->generateArguments($validation);
+        $arguments = $this->generateArguments($validation->getArguments());
 
         if (!$reflecter->hasMethod($methodName)) {
             throw new Exception('Inexistent method!');
@@ -107,24 +116,5 @@ class Executor extends PHPUnit_Framework_TestCase
          *
          * $object->$methodName();
          */
-    }
-
-    /**
-     * @param Validation $validation
-     * @return array
-     */
-    private function generateArguments(Validation $validation)
-    {
-        if (!$validation->getArguments()) {
-            return [];
-        }
-
-        $arguments = [];
-
-        foreach ($validation->getArguments() as $argument) {
-            $arguments[] = $argument->getValue();
-        }
-
-        return $arguments;
     }
 }
