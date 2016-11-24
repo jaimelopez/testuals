@@ -10,10 +10,65 @@
 
 namespace Santa\Testuals;
 
+use Santa\Testuals\Test\Validation;
+use Symfony\Component\Finder\Finder;
+
 class Command
 {
+    const TESTS_FOLDER = __DIR__ . '/../tests/';
+    const TESTS_EXTENSION = 'test';
+
     public function run()
     {
-        die('Fuck you!' . PHP_EOL);
+        $validation = new Validation();
+        $validation->setMethod('methodToTest')
+            ->setExpectations([
+                new Validation\Expectation()
+            ])
+            ->setArguments([
+                new Validation\Argument('hola')
+            ]);
+
+        $test = new Test();
+        $test->setClassname('ToTest\ServiceToTest')
+            ->setValidations([$validation])
+            ->execute();
+
+        /*
+        foreach ($this->retrieveTests() as $testFile) {
+            $test = new Test($testFile);
+        }
+        */
+    }
+
+    /**
+     * @return string
+     */
+    private function getTestsFolder()
+    {
+        return realpath(self::TESTS_FOLDER);
+    }
+
+    /***
+     * @return string
+     */
+    private function getTestsExtension()
+    {
+        return self::TESTS_EXTENSION;
+    }
+
+    /**
+     * @return Finder|\Symfony\Component\Finder\SplFileInfo[]
+     */
+    private function retrieveTests()
+    {
+        $folder = $this->getTestsFolder();
+        $pattern = '*' . $this->getTestsExtension();
+
+        $finder = new Finder();
+
+        return $finder->files()
+            ->name($pattern)
+            ->in($folder);
     }
 }
