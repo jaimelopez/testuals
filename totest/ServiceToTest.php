@@ -12,6 +12,17 @@ namespace ToTest;
 
 class ServiceToTest
 {
+    /** @var array */
+    private $dependency1;
+
+    /**
+     * @param array $dependency1
+     */
+    public function __construct(array $dependency1)
+    {
+        $this->dependency1 = $dependency1;
+    }
+
     public function methodToTest($argument1)
     {
         printf('This is the first argument %s', $argument1);
