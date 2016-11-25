@@ -1,0 +1,8 @@
+class: ToTest\ServiceToTest
+dependencies:
+    - [ "prueba" ]
+method: "methodToTest"
+arguments:
+    - "tessst"
+assertions:
+    - "'##result##' == 1"

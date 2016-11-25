@@ -10,7 +10,7 @@
 
 namespace Santa\Testuals;
 
-use Santa\Testuals\Test\Validation;
+use Santa\Testuals\Test\Parser;
 use Symfony\Component\Finder\Finder;
 
 class Command
@@ -20,26 +20,9 @@ class Command
 
     public function run()
     {
-        $validation = new Validation();
-        $validation->setMethod('methodToTest')
-            ->setExpectations([
-                new Validation\Expectation()
-            ])
-            ->setArguments(['tessst']);
-
-        $test = new Test();
-        $test->setClassname('ToTest\ServiceToTest')
-            ->setDependencies([
-                ['hola']
-            ])
-            ->setValidations([$validation])
-            ->execute();
-
-        /*
-        foreach ($this->retrieveTests() as $testFile) {
-            $test = new Test($testFile);
+        foreach ($this->retrieveTests() as $test) {
+            $test->execute();
         }
-        */
     }
 
     /**
@@ -59,7 +42,7 @@ class Command
     }
 
     /**
-     * @return Finder|\Symfony\Component\Finder\SplFileInfo[]
+     * @return Test[]:
      */
     private function retrieveTests()
     {
@@ -68,8 +51,18 @@ class Command
 
         $finder = new Finder();
 
-        return $finder->files()
+        $files = $finder->files()
             ->name($pattern)
             ->in($folder);
+
+        $tests = [];
+
+        foreach ($files as $file) {
+            $parser = new Parser($file);
+
+            $tests[] = $parser->getTest();
+        }
+
+        return $tests;
     }
 }

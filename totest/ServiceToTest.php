@@ -25,6 +25,6 @@ class ServiceToTest
 
     public function methodToTest($argument1)
     {
-        printf('This is the first argument %s', $argument1);
+        return $argument1;
     }
 }

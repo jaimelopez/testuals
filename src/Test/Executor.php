@@ -10,7 +10,7 @@
 
 namespace Santa\Testuals\Test;
 
-use Doctrine\Instantiator\Instantiator;
+use BadMethodCallException;
 use Exception;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
@@ -20,11 +20,7 @@ use Santa\Testuals\Test;
 
 class Executor extends PHPUnit_Framework_TestCase
 {
-    /** @var Test */
-    private $test;
-
-    /** @var PHPUnit_Framework_MockObject_MockObject[] */
-    private $dependencies;
+    const RESULT_KEY = '##result##';
 
     /**
      * @param Test $test
@@ -36,16 +32,47 @@ class Executor extends PHPUnit_Framework_TestCase
             throw new Exception('You must to specify the class to test');
         }
 
-        if (!$test->getValidations()) {
-            throw new Exception('You must to specify some validations!');
-        }
-
-        $this->test = $test;
-        $this->dependencies = $this->generateArguments($test->getDependencies());
-
         parent::__construct();
 
-        $this->execute();
+        $this->execute($test);
+    }
+
+    /**
+     * @param Test $test
+     */
+    private function execute(Test $test)
+    {
+        $className = $test->getClassName();
+
+        $dependencies = $this->generateArguments($test->getDependencies());
+
+        $reflecter = new ReflectionClass($className);
+        $instance = $reflecter->newInstanceArgs($dependencies);
+
+        $methodName = $test->getMethodName();
+        $method = $reflecter->getMethod($methodName);
+        $arguments = $this->generateArguments($test->getArguments());
+
+        if (!$reflecter->hasMethod($methodName)) {
+            throw new BadMethodCallException('Inexistent method!');
+        }
+
+        if (!$method->isPublic()) {
+            throw new BadMethodCallException('Method to test should be public!');
+        }
+
+        $result = $method->invokeArgs($instance, $arguments);
+
+        $this->checkAssertions($test, $result);
+
+        /**
+         * TODO: Maybe change it for Instantiator Doctrine library
+         *
+         * $instantiator = new Instantiator();
+         * $object = $instantiator->instantiate($className);
+         *
+         * $object->$methodName();
+         */
     }
 
     /**
@@ -75,46 +102,14 @@ class Executor extends PHPUnit_Framework_TestCase
         return $objects;
     }
 
-    private function execute()
-    {
-        foreach ($this->test->getValidations() as $validation) {
-            $this->validate($validation);
-        }
-    }
-
     /**
-     * @param Validation $validation
+     * @param Test $test
+     * @param      $result
      */
-    private function validate(Validation $validation)
+    private function checkAssertions(Test $test, $result)
     {
-        $className = $this->test->getClassname();
-
-        $dependencies = $this->dependencies;
-
-        $reflecter = new ReflectionClass($className);
-        $instance = $reflecter->newInstanceArgs($dependencies);
-
-        $methodName = $validation->getMethod();
-        $method = $reflecter->getMethod($methodName);
-        $arguments = $this->generateArguments($validation->getArguments());
-
-        if (!$reflecter->hasMethod($methodName)) {
-            throw new Exception('Inexistent method!');
+        foreach ($test->getAssertions() as $assertion) {
+            $assertion = str_replace(self::RESULT_KEY, $result, $assertion);
         }
-
-        if (!$method->isPublic()) {
-            throw new Exception('Method to test should be public!');
-        }
-
-        $method->invokeArgs($instance, $arguments);
-
-        /**
-         * TODO: Maybe change it for Instantiator Doctrine library
-         *
-         * $instantiator = new Instantiator();
-         * $object = $instantiator->instantiate($className);
-         *
-         * $object->$methodName();
-         */
     }
 }

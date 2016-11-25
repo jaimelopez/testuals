@@ -11,7 +11,8 @@
 namespace Santa\Testuals;
 
 use Santa\Testuals\Test\Executor;
-use Santa\Testuals\Test\Validation;
+use Santa\Testuals\Test\Validation\Assertion;
+use Santa\Testuals\Test\Validation\Expectation;
 
 class Test
 {
@@ -21,8 +22,17 @@ class Test
     /** @var array */
     private $dependencies;
 
-    /** @var Validation[] */
-    private $validations;
+    /** @var string */
+    private $methodName;
+
+    /** @var array */
+    private $arguments;
+
+    /** @var Assertion[] */
+    private $assertions;
+
+    /** @var Expectation[] */
+    private $expectations;
 
     /**
      * @return string
@@ -63,19 +73,77 @@ class Test
     }
 
     /**
-     * @return Validation[]
+     * @return string
      */
-    public function getValidations()
+    public function getMethodName()
     {
-        return $this->validations;
+        return $this->methodName;
     }
 
     /**
-     * @param Validation[] $validations
+     * @param string $methodName
+     * @return Test
      */
-    public function setValidations($validations)
+    public function setMethodName($methodName)
     {
-        $this->validations = $validations;
+        $this->methodName = $methodName;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArguments()
+    {
+        return $this->arguments;
+    }
+
+    /**
+     * @param array $arguments
+     * @return Test
+     */
+    public function setArguments(array $arguments)
+    {
+        $this->arguments = $arguments;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAssertions()
+    {
+        return $this->assertions;
+    }
+
+    /**
+     * @param array $assertions
+     * @return Test
+     */
+    public function setAssertions(array $assertions)
+    {
+        $this->assertions = $assertions;
+
+        return $this;
+    }
+
+    /**
+     * @return Expectation[]
+     */
+    public function getExpectations()
+    {
+        return $this->expectations;
+    }
+
+    /**
+     * @param Expectation[] $expectations
+     * @return Test
+     */
+    public function setExpectations(array $expectations)
+    {
+        $this->expectations = $expectations;
 
         return $this;
     }
