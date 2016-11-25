@@ -52,7 +52,13 @@ class Executor extends PHPUnit_Framework_TestCase
          */
 
         try {
-            echo sprintf('Executing %s test... ', $test->getName());
+            echo sprintf('@ Executing %s test... ', $test->getName());
+
+            if ($test->isDisabled()) {
+                echo '[ DISABLED ]' . PHP_EOL;
+
+                return;
+            }
 
             $className = $test->getClassName();
 
@@ -77,7 +83,7 @@ class Executor extends PHPUnit_Framework_TestCase
 
             $this->checkAssertions($test, $result);
 
-            echo '[ PASSED ]';
+            echo '[ PASSED ]'. PHP_EOL;
         }
         catch (\Assert\AssertionFailedException $exception) {
             echo '[ FAILED ]' . PHP_EOL;

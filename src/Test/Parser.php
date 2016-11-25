@@ -83,7 +83,8 @@ class Parser
             'dependencies',
             'arguments',
             'assertions',
-            'expectations'
+            'expectations',
+            'disabled'
         ], $requiredParameters);
 
         foreach ($requiredParameters as $parameter) {
@@ -146,6 +147,10 @@ class Parser
 
             case 'expectations':
                 $test->setExpectations($value);
+                break;
+
+            case 'disabled':
+                $test->setDisabled(boolval($value));
                 break;
         }
 

@@ -12,18 +12,47 @@ namespace Santa\Testuals;
 
 use Santa\Testuals\Test\Executor;
 use Santa\Testuals\Test\Parser;
+use Symfony\Component\Console\Command\Command as CommandBase;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
-class Command
+class Command extends CommandBase
 {
-    const TESTS_FOLDER = __DIR__ . '/../tests/';
-    const TESTS_EXTENSION = 'test';
+    const DEFAULT_TESTS_FOLDER = __DIR__ . '/../tests/';
+    const DEFAULT_TESTS_EXTENSION = 'test';
 
-    public function run()
+    /** @var string */
+    private $path;
+
+    /** @var string */
+    private $extension;
+
+    protected function configure()
     {
+        $this
+            ->setName('Testuals')
+            ->addOption('path', 'p', InputOption::VALUE_OPTIONAL, 'Path for tests', self::DEFAULT_TESTS_FOLDER)
+            ->addOption('extension', 'e', InputOption::VALUE_OPTIONAL, 'Extension', self::DEFAULT_TESTS_EXTENSION);
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->setOptions($input);
+
         foreach ($this->retrieveTests() as $test) {
             new Executor($test);
         }
+    }
+
+    /**
+     * @param InputInterface $input
+     */
+    private function setOptions(InputInterface $input)
+    {
+        $this->path = $input->getOption('path');
+        $this->extension = $input->getOption('extension');
     }
 
     /**
@@ -31,7 +60,7 @@ class Command
      */
     private function getTestsFolder()
     {
-        return realpath(self::TESTS_FOLDER);
+        return realpath(self::DEFAULT_TESTS_FOLDER);
     }
 
     /***
@@ -39,7 +68,7 @@ class Command
      */
     private function getTestsExtension()
     {
-        return self::TESTS_EXTENSION;
+        return self::DEFAULT_TESTS_EXTENSION;
     }
 
     /**

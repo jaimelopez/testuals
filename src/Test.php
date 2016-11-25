@@ -36,6 +36,9 @@ class Test
     /** @var Expectation[] */
     private $expectations;
 
+    /** @var bool */
+    private $disabled;
+
     /**
      * @return string
      */
@@ -165,6 +168,24 @@ class Test
     public function setExpectations(array $expectations)
     {
         $this->expectations = $expectations;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDisabled()
+    {
+        return $this->disabled;
+    }
+
+    /**
+     * @param boolean $disabled
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
 
         return $this;
     }

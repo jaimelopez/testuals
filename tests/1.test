@@ -6,4 +6,5 @@ method: "methodToTest"
 arguments:
     - "tessst"
 assertions:
-    - { that: "same", value: "aa" }
+    - { that: "notEq", value: "aa" }
+disabled: true
