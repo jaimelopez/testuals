@@ -1,4 +1,4 @@
-name: "Unique name"
+name: "Unique name 2"
 class: ToTest\ServiceToTest
 dependencies:
     - [ "prueba" ]

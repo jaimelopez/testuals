@@ -10,12 +10,14 @@
 
 namespace Santa\Testuals;
 
-use Santa\Testuals\Test\Executor;
 use Santa\Testuals\Test\Validation\Assertion;
 use Santa\Testuals\Test\Validation\Expectation;
 
 class Test
 {
+    /** @var string */
+    private $name;
+
     /** @var string */
     private $classname;
 
@@ -33,6 +35,25 @@ class Test
 
     /** @var Expectation[] */
     private $expectations;
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return Test
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
 
     /**
      * @return string
@@ -111,7 +132,7 @@ class Test
     }
 
     /**
-     * @return array
+     * @return Assertion[]
      */
     public function getAssertions()
     {
@@ -119,7 +140,7 @@ class Test
     }
 
     /**
-     * @param array $assertions
+     * @param Assertion[] $assertions
      * @return Test
      */
     public function setAssertions(array $assertions)
@@ -146,10 +167,5 @@ class Test
         $this->expectations = $expectations;
 
         return $this;
-    }
-
-    public function execute()
-    {
-        new Executor($this);
     }
 }

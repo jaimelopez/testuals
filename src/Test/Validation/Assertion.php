@@ -10,4 +10,37 @@
 
 namespace Santa\Testuals\Test\Validation;
 
-class Assertion { }
+class Assertion
+{
+    /** @var string */
+    private $that;
+
+    /** @var mixed */
+    private $value;
+
+    /**
+     * @param string $that
+     * @param mixed $value
+     */
+    public function __construct($that, $value)
+    {
+        $this->that = $that;
+        $this->value = $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getThat()
+    {
+        return $this->that;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+}

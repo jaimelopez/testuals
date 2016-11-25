@@ -42,29 +42,6 @@ class Executor extends PHPUnit_Framework_TestCase
      */
     private function execute(Test $test)
     {
-        $className = $test->getClassName();
-
-        $dependencies = $this->generateArguments($test->getDependencies());
-
-        $reflecter = new ReflectionClass($className);
-        $instance = $reflecter->newInstanceArgs($dependencies);
-
-        $methodName = $test->getMethodName();
-        $method = $reflecter->getMethod($methodName);
-        $arguments = $this->generateArguments($test->getArguments());
-
-        if (!$reflecter->hasMethod($methodName)) {
-            throw new BadMethodCallException('Inexistent method!');
-        }
-
-        if (!$method->isPublic()) {
-            throw new BadMethodCallException('Method to test should be public!');
-        }
-
-        $result = $method->invokeArgs($instance, $arguments);
-
-        $this->checkAssertions($test, $result);
-
         /**
          * TODO: Maybe change it for Instantiator Doctrine library
          *
@@ -73,6 +50,41 @@ class Executor extends PHPUnit_Framework_TestCase
          *
          * $object->$methodName();
          */
+
+        try {
+            echo sprintf('Executing %s test... ', $test->getName());
+
+            $className = $test->getClassName();
+
+            $dependencies = $this->generateArguments($test->getDependencies());
+
+            $reflecter = new ReflectionClass($className);
+            $instance = $reflecter->newInstanceArgs($dependencies);
+
+            $methodName = $test->getMethodName();
+            $method = $reflecter->getMethod($methodName);
+            $arguments = $this->generateArguments($test->getArguments());
+
+            if (!$reflecter->hasMethod($methodName)) {
+                throw new BadMethodCallException('Inexistent method!');
+            }
+
+            if (!$method->isPublic()) {
+                throw new BadMethodCallException('Method to test should be public!');
+            }
+
+            $result = $method->invokeArgs($instance, $arguments);
+
+            $this->checkAssertions($test, $result);
+
+            echo '[ PASSED ]';
+        }
+        catch (\Assert\AssertionFailedException $exception) {
+            echo '[ FAILED ]' . PHP_EOL;
+        }
+        catch (Exception $exception) {
+            throw $exception;
+        }
     }
 
     /**
@@ -90,13 +102,13 @@ class Executor extends PHPUnit_Framework_TestCase
         foreach ($objects as $object) {
             $objectAnalyzer = new ObjectAnalyzer($object);
 
-            if ($objectAnalyzer->isPrimitive()) {
-                $arguments[] = $object;
+            if ($objectAnalyzer->isReference() || !$objectAnalyzer->isPrimitive()) {
+                $objects[] = $this->createMock(get_class($object));
 
                 continue;
             }
 
-            $objects[] = $this->createMock(get_class($object));
+            $arguments[] = $object;
         }
 
         return $objects;
@@ -109,7 +121,14 @@ class Executor extends PHPUnit_Framework_TestCase
     private function checkAssertions(Test $test, $result)
     {
         foreach ($test->getAssertions() as $assertion) {
-            $assertion = str_replace(self::RESULT_KEY, $result, $assertion);
+            $assertThat = $assertion->getThat();
+            $assertValue = $assertion->getValue();
+
+            $assert = \Assert\Assert::that($result);
+
+            $result = !empty($assertValue)
+                ? $assert->$assertThat($assertValue)
+                : $assert->$assertThat();
         }
     }
 }

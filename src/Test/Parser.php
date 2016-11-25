@@ -12,6 +12,7 @@ namespace Santa\Testuals\Test;
 
 use InvalidArgumentException;
 use Santa\Testuals\Test;
+use Santa\Testuals\Test\Validation;
 use Symfony\Component\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 
@@ -71,9 +72,12 @@ class Parser
         return $test;
     }
 
-    private function validateTestData($data)
+    /**
+     * @param array $data
+     */
+    private function validateTestData(array $data)
     {
-        $requiredParameters = ['class', 'method'];
+        $requiredParameters = ['name', 'class', 'method'];
 
         $validParameters = array_merge([
             'dependencies',
@@ -85,7 +89,7 @@ class Parser
         foreach ($requiredParameters as $parameter) {
             if (!key_exists($parameter, $data)) {
                 throw new InvalidArgumentException(
-                    sprintf('%s parameter is missing in %s test file', $parameter, $this->file),
+                    sprintf('%s test parameter is missing in %s test file', $parameter, $this->file),
                     0
                 );
             }
@@ -101,7 +105,7 @@ class Parser
         foreach ($data as $parameter => $value) {
             if (!in_array($parameter, $validParameters)) {
                 throw new InvalidArgumentException(sprintf(
-                    'Unknown parameter %s in test file %s', $parameter, $this->file
+                    'Unknown test parameter %s in test file %s', $parameter, $this->file
                 ));
             }
         }
@@ -116,6 +120,10 @@ class Parser
     private function fillTestProperty(Test $test, $property, $value)
     {
         switch ($property) {
+            case 'name':
+                $test->setName($value);
+                break;
+
             case 'class':
                 $test->setClassname($value);
                 break;
@@ -133,7 +141,7 @@ class Parser
                 break;
 
             case 'assertions':
-                $test->setAssertions($value);
+                $test->setAssertions($this->generateAssertions($value));
                 break;
 
             case 'expectations':
@@ -142,5 +150,48 @@ class Parser
         }
 
         return $test;
+    }
+
+
+    /**
+     * @param array $items
+     * @return Validation\Assertion[]
+     */
+    private function generateAssertions($items)
+    {
+        $assertions = [];
+
+        foreach ($items as $item) {
+            $this->validateAssertion($item);
+
+            $assertions[] = new Validation\Assertion($item['that'], $item['value']);
+        }
+
+        return $assertions;
+    }
+
+    /**
+     * @param array $data
+     */
+    private function validateAssertion(array $data)
+    {
+        $parameters = ['that', 'value'];
+
+        foreach ($parameters as $parameter) {
+            if (!key_exists($parameter, $data)) {
+                throw new InvalidArgumentException(
+                    sprintf('%s assertion parameter is missing in %s test file', $parameter, $this->file),
+                    0
+                );
+            }
+        }
+
+        foreach ($data as $parameter => $value) {
+            if (!in_array($parameter, $parameters)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Unknown assertion parameter %s in test file %s', $parameter, $this->file
+                ));
+            }
+        }
     }
 }

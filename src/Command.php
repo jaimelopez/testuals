@@ -10,6 +10,7 @@
 
 namespace Santa\Testuals;
 
+use Santa\Testuals\Test\Executor;
 use Santa\Testuals\Test\Parser;
 use Symfony\Component\Finder\Finder;
 
@@ -21,7 +22,7 @@ class Command
     public function run()
     {
         foreach ($this->retrieveTests() as $test) {
-            $test->execute();
+            new Executor($test);
         }
     }
 

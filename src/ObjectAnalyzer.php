@@ -12,6 +12,8 @@ namespace Santa\Testuals;
 
 class ObjectAnalyzer
 {
+    const REFERENCE_PREFIX = '@';
+
     /** @var mixed */
     private $object;
 
@@ -41,5 +43,29 @@ class ObjectAnalyzer
         $type = gettype($this->object);
 
         return in_array($type, $primitiveTypes);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReference()
+    {
+        if (!is_string($this->object)) {
+            return false;
+        }
+
+        return strpos($this->object, self::REFERENCE_PREFIX) === 0;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReference()
+    {
+        if (!$this->isReference()) {
+            return;
+        }
+
+        return substr($this->object, strlen(self::REFERENCE_PREFIX));
     }
 }
