@@ -90,7 +90,7 @@ class Command extends CommandBase
         foreach ($files as $file) {
             $parser = new Parser($file);
 
-            $tests[] = $parser->getTest();
+            $tests[] = $parser->get();
         }
 
         return $tests;

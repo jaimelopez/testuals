@@ -12,7 +12,6 @@ namespace Santa\Testuals\Test;
 
 use InvalidArgumentException;
 use Santa\Testuals\Test;
-use Santa\Testuals\Test\Validation;
 use Symfony\Component\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 
@@ -32,7 +31,7 @@ class Parser
     /**
      * @return Test
      */
-    public function getTest()
+    public function get()
     {
         $parser = new Yaml\Parser();
         $dataParsed = null;
@@ -130,7 +129,7 @@ class Parser
                 break;
 
             case 'dependencies':
-                $test->setDependencies($value);
+                $test->setDependencies($this->generateDependencies($value));
                 break;
 
             case 'method':
@@ -146,7 +145,7 @@ class Parser
                 break;
 
             case 'expectations':
-                $test->setExpectations($value);
+                $test->setExpectations($this->generateExpectations($value));
                 break;
 
             case 'disabled':
@@ -157,46 +156,36 @@ class Parser
         return $test;
     }
 
-
     /**
      * @param array $items
-     * @return Validation\Assertion[]
+     * @return Dependency[]
      */
-    private function generateAssertions($items)
+    private function generateDependencies(array $items)
     {
-        $assertions = [];
+        $parser = new Dependency\Parser($this->file, $items);
 
-        foreach ($items as $item) {
-            $this->validateAssertion($item);
-
-            $assertions[] = new Validation\Assertion($item['that'], $item['value']);
-        }
-
-        return $assertions;
+        return $parser->get();
     }
 
     /**
-     * @param array $data
+     * @param array $items
+     * @return Assertion[]
      */
-    private function validateAssertion(array $data)
+    private function generateAssertions(array $items)
     {
-        $parameters = ['that', 'value'];
+        $parser = new Assertion\Parser($this->file, $items);
 
-        foreach ($parameters as $parameter) {
-            if (!key_exists($parameter, $data)) {
-                throw new InvalidArgumentException(
-                    sprintf('%s assertion parameter is missing in %s test file', $parameter, $this->file),
-                    0
-                );
-            }
-        }
+        return $parser->get();
+    }
 
-        foreach ($data as $parameter => $value) {
-            if (!in_array($parameter, $parameters)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Unknown assertion parameter %s in test file %s', $parameter, $this->file
-                ));
-            }
-        }
+    /**
+     * @param array $items
+     * @return Expectation[]
+     */
+    private function generateExpectations(array $items)
+    {
+        $parser = new Expectation\Parser($this->file, $items);
+
+        return $parser->get();
     }
 }

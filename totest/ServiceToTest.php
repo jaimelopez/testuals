@@ -13,18 +13,23 @@ namespace ToTest;
 class ServiceToTest
 {
     /** @var array */
-    private $dependency1;
+    private $array;
+
+    /** @var OOObject */
+    private $object;
 
     /**
-     * @param array $dependency1
+     * @param array    $array
+     * @param OOObject $object
      */
-    public function __construct(array $dependency1)
+    public function __construct(array $array, OOObject $object)
     {
-        $this->dependency1 = $dependency1;
+        $this->array = $array;
+        $this->object = $object;
     }
 
     public function methodToTest($argument1)
     {
-        return $argument1;
+        return $this->object->method1();
     }
 }

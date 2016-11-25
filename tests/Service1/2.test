@@ -1,7 +1,11 @@
 name: "Unique name 2"
 class: ToTest\ServiceToTest
 dependencies:
-    - [ "prueba" ]
+    0: [ "blabla" ]
+    1:
+        class: "@ToTest\\OOObject"
+        behaviours:
+            - { call: "method1", return "fake return 1" }
 method: "methodToTest"
 arguments:
     - "tessst"

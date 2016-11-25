@@ -62,7 +62,7 @@ class Executor extends PHPUnit_Framework_TestCase
 
             $className = $test->getClassName();
 
-            $dependencies = $this->generateArguments($test->getDependencies());
+            $dependencies = $this->generateDependencies($test);
 
             $reflecter = new ReflectionClass($className);
             $instance = $reflecter->newInstanceArgs($dependencies);
@@ -94,6 +94,40 @@ class Executor extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param Test $test
+     * @return array|PHPUnit_Framework_MockObject_MockObject[]
+     */
+    private function generateDependencies(Test $test)
+    {
+        $dependencies = [];
+
+        foreach ($test->getDependencies() as $dependency) {
+            if ($dependency->isValue()) {
+                $dependencies[] = $dependency->getValue();
+
+                continue;
+            }
+
+            $dependencyObject  = $this->generateSingleArgument($dependency->getClassName());
+
+            if (!$dependency->getBehaviours()) {
+                $dependencies[] = $dependencyObject;
+
+                continue;
+            }
+
+            foreach ($dependency->getBehaviours() as $behaviour) {
+                $dependencyObject->method($behaviour->getCall())
+                    ->willReturn($behaviour->getReturn());
+            }
+
+            $dependencies[] = $dependencyObject;
+        }
+
+        return $dependencies;
+    }
+
+    /**
      * @param array
      * @return array|PHPUnit_Framework_MockObject_MockObject[]
      */
@@ -106,18 +140,29 @@ class Executor extends PHPUnit_Framework_TestCase
         $arguments = [];
 
         foreach ($objects as $object) {
-            $objectAnalyzer = new ObjectAnalyzer($object);
-
-            if ($objectAnalyzer->isReference() || !$objectAnalyzer->isPrimitive()) {
-                $objects[] = $this->createMock(get_class($object));
-
-                continue;
-            }
-
-            $arguments[] = $object;
+            $arguments[] = $this->generateSingleArgument($object);
         }
 
-        return $objects;
+        return $arguments;
+    }
+
+    /**
+     * @param mixed $object
+     * @return PHPUnit_Framework_MockObject_MockObject|mixed
+     */
+    private function generateSingleArgument($object)
+    {
+        $objectAnalyzer = new ObjectAnalyzer($object);
+
+        if ($objectAnalyzer->isPrimitive() && !$objectAnalyzer->isReference()) {
+            return $object;
+        }
+
+        $className = $objectAnalyzer->isReference()
+            ? $objectAnalyzer->getReference()
+            : get_class($object);
+
+        return $this->createMock($className);
     }
 
     /**

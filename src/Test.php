@@ -10,8 +10,9 @@
 
 namespace Santa\Testuals;
 
-use Santa\Testuals\Test\Validation\Assertion;
-use Santa\Testuals\Test\Validation\Expectation;
+use Santa\Testuals\Test\Assertion;
+use Santa\Testuals\Test\Dependency;
+use Santa\Testuals\Test\Expectation;
 
 class Test
 {
@@ -21,7 +22,7 @@ class Test
     /** @var string */
     private $classname;
 
-    /** @var array */
+    /** @var Dependency[] */
     private $dependencies;
 
     /** @var string */
@@ -78,7 +79,7 @@ class Test
     }
 
     /**
-     * @return array
+     * @return Dependency[]
      */
     public function getDependencies()
     {
@@ -86,7 +87,7 @@ class Test
     }
 
     /**
-     * @param array $dependencies
+     * @param Dependency[] $dependencies
      * @return Test
      */
     public function setDependencies(array $dependencies)

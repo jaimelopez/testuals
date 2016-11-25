@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Santa\Testuals\Test\Validation;
+namespace Santa\Testuals\Test;
 
 class Assertion
 {
