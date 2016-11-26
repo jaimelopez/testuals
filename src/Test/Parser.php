@@ -55,16 +55,16 @@ class Parser
     }
 
     /**
-     * @param array $dataParsed
+     * @param array $data
      * @return Test
      */
-    private function parse(array $dataParsed)
+    private function parse(array $data)
     {
-        $this->validateTestData($dataParsed);
+        $this->validate($data);
 
         $test = new Test();
 
-        foreach ($dataParsed as $property => $value) {
+        foreach ($data as $property => $value) {
             $test = $this->fillTestProperty($test, $property, $value);
         }
 
@@ -74,41 +74,10 @@ class Parser
     /**
      * @param array $data
      */
-    private function validateTestData(array $data)
+    private function validate(array $data)
     {
-        $requiredParameters = ['name', 'class', 'method'];
-
-        $validParameters = array_merge([
-            'dependencies',
-            'arguments',
-            'assertions',
-            'expectations',
-            'disabled'
-        ], $requiredParameters);
-
-        foreach ($requiredParameters as $parameter) {
-            if (!key_exists($parameter, $data)) {
-                throw new InvalidArgumentException(
-                    sprintf('%s test parameter is missing in %s test file', $parameter, $this->file),
-                    0
-                );
-            }
-        }
-
-        if (!key_exists('assertions', $data) && !key_exists('expectations', $data)) {
-            throw new InvalidArgumentException(
-                sprintf('Some to validate is needed in %s test file', $this->file),
-                0
-            );
-        }
-
-        foreach ($data as $parameter => $value) {
-            if (!in_array($parameter, $validParameters)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Unknown test parameter %s in test file %s', $parameter, $this->file
-                ));
-            }
-        }
+        $validator = new Validator();
+        $validator->validate($data, $this->file);
     }
 
     /**

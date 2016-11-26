@@ -53,27 +53,7 @@ class Parser
      */
     private function validate($data)
     {
-        if (!is_array($data)) {
-            return;
-        }
-
-        $parameters = ['call', 'return'];
-
-        foreach ($parameters as $parameter) {
-            if (!key_exists($parameter, $data)) {
-                throw new InvalidArgumentException(
-                    sprintf('%s behaviour dependency parameter is missing in %s test file', $parameter, $this->file),
-                    0
-                );
-            }
-        }
-
-        foreach ($data as $parameter => $value) {
-            if (!in_array($parameter, $parameters)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Unknown behaviour  dependency parameter %s in test file %s', $parameter, $this->file
-                ));
-            }
-        }
+        $validator = new Validator();
+        $validator->validate($data, $this->file);
     }
 }

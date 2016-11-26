@@ -59,27 +59,7 @@ class Parser
      */
     private function validate(array $data)
     {
-        $requiredParameters = ['that'];
-
-        $validParameters = array_merge([
-            'value'
-        ], $requiredParameters);
-
-        foreach ($requiredParameters as $parameter) {
-            if (!key_exists($parameter, $data)) {
-                throw new InvalidArgumentException(
-                    sprintf('%s assertion parameter is missing in %s test file', $parameter, $this->file),
-                    0
-                );
-            }
-        }
-
-        foreach ($data as $parameter => $value) {
-            if (!in_array($parameter, $validParameters)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Unknown assertion parameter %s in test file %s', $parameter, $this->file
-                ));
-            }
-        }
+        $validator = new Validator();
+        $validator->validate($data, $this->file);
     }
 }

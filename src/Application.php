@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 class Application extends BaseApplication
 {
     const NAME = 'Testuals';
-    const VERSION = '0.1-Beta';
+    const VERSION = '0.1-beta';
 
     /**
      * @param InputInterface $input
