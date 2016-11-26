@@ -32,8 +32,7 @@
 
   "autoload": {
     "psr-4": {
-      "Santa\\Testuals\\": "src/",
-      "ToTest\\": "totest/"
+      "Santa\\Testuals\\": "src/"
     }
   },
 
