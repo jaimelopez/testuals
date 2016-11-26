@@ -42,7 +42,7 @@ class Command extends CommandBase
         $this->setOptions($input);
 
         foreach ($this->retrieveTests() as $test) {
-            new Executor($test);
+            new Executor($test, $output);
         }
     }
 

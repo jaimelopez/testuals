@@ -16,6 +16,10 @@ use Santa\Testuals\Test\Expectation;
 
 class Test
 {
+    const FAILED = 'failed';
+    const PASSED = 'passed';
+    const DISABLED = 'disabled';
+
     /** @var string */
     private $name;
 

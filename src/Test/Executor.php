@@ -17,17 +17,22 @@ use PHPUnit_Framework_TestCase;
 use ReflectionClass;
 use Santa\Testuals\ObjectAnalyzer;
 use Santa\Testuals\Test;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class Executor extends PHPUnit_Framework_TestCase
 {
-    const RESULT_KEY = '##result##';
+    /** @var OutputInterface */
+    private $output;
 
     /**
      * @param Test $test
+     * @param OutputInterface $output
      * @throws Exception
      */
-    public function __construct(Test $test)
+    public function __construct(Test $test, OutputInterface $output = null)
     {
+        $this->output = $output;
+
         if (!$test->getClassname()) {
             throw new Exception('You must to specify the class to test');
         }
@@ -51,11 +56,11 @@ class Executor extends PHPUnit_Framework_TestCase
          * $object->$methodName();
          */
 
-        try {
-            echo sprintf('@ Executing %s test... ', $test->getName());
+        $this->showHeader();
 
+        try {
             if ($test->isDisabled()) {
-                echo '[ DISABLED ]' . PHP_EOL;
+                $this->showTestResult($test, Test::DISABLED);
 
                 return;
             }
@@ -83,10 +88,10 @@ class Executor extends PHPUnit_Framework_TestCase
 
             $this->checkAssertions($test, $result);
 
-            echo '[ PASSED ]'. PHP_EOL;
+            $this->showTestResult($test, Test::PASSED);
         }
         catch (\Assert\AssertionFailedException $exception) {
-            echo '[ FAILED ]' . PHP_EOL;
+            $this->showTestResult($test, Test::FAILED);
         }
         catch (Exception $exception) {
             throw $exception;
@@ -187,5 +192,61 @@ class Executor extends PHPUnit_Framework_TestCase
                 ? $assert->$assertThat($assertValue)
                 : $assert->$assertThat();
         }
+    }
+
+
+    private function showHeader()
+    {
+        $this->show('');
+        $this->show(sprintf('%s version %s', APPLICATION_NAME, APPLICATION_VERSION));
+        $this->show('');
+    }
+
+    /**
+     * @param Test $test
+     * @param string $status
+     */
+    private function showTestResult(Test $test, $status)
+    {
+        $message = sprintf('@ Executing %s test... [%s]', $test->getName(), $this->formatTestStatus($status));
+
+        $this->show($message);
+    }
+
+    /**
+     * @param string $message
+     */
+    private function show($message)
+    {
+        if (!$this->output) {
+            return;
+        }
+
+        $this->output->writeln($message);
+    }
+
+    /**
+     * @param $status
+     * @return string
+     */
+    private function formatTestStatus($status)
+    {
+        $style = 'question';
+
+        switch ($status) {
+            case Test::FAILED:
+                $style = 'error';
+                break;
+
+            case Test::PASSED:
+                $style = 'info';
+                break;
+
+            case Test::DISABLED:
+                $style = 'comment';
+                break;
+        }
+
+        return sprintf('<%s>%s</%s>', $style, strtoupper($status), $style);
     }
 }
