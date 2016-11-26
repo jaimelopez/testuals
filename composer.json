@@ -18,15 +18,12 @@
     "symfony/console":              "^3.1",
     "symfony/config":               "^3.1",
     "symfony/dependency-injection": "^3.1",
-    "symfony/event-dispatcher":     "^3.1",
     "symfony/yaml":                 "^3.1",
     "symfony/finder":               "^3.1",
-    "doctrine/instantiator":        "^1.0",
     "beberlei/assert":              "^2.6"
   },
 
   "require-dev": {
-    "symfony/process":              "~2.5|~3.0",
     "phpunit/phpunit":              "~5.6"
   },
 
