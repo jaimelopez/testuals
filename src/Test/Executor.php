@@ -72,7 +72,7 @@ class Executor extends PHPUnit_Framework_TestCase
 
             $methodName = $test->getMethodName();
             $method = $reflecter->getMethod($methodName);
-            $arguments = $this->generateArguments($test->getArguments());
+            $arguments = $this->generateArguments($test);
 
             if (!$reflecter->hasMethod($methodName)) {
                 throw new BadMethodCallException('Inexistent method!');
@@ -141,19 +141,19 @@ class Executor extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array
+     * @param Test $test
      * @return array|PHPUnit_Framework_MockObject_MockObject[]
      */
-    private function generateArguments(array $objects)
+    private function generateArguments(Test $test)
     {
-        if (!$objects) {
+        if (!$test->getArguments()) {
             return [];
         }
 
         $arguments = [];
 
-        foreach ($objects as $object) {
-            $arguments[] = $this->generateResolvedObject($object);
+        foreach ($test->getArguments() as $argument) {
+            $arguments[] = $this->generateResolvedObject($argument);
         }
 
         return $arguments;
