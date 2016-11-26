@@ -102,6 +102,10 @@ class Executor extends PHPUnit_Framework_TestCase
      */
     private function generateDependencies(Test $test)
     {
+        if (!$test->getDependencies()) {
+            return [];
+        }
+
         $dependencies = [];
 
         foreach ($test->getDependencies() as $dependency) {
