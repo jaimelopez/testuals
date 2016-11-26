@@ -56,6 +56,12 @@ class Parser
             return $dependency->setValue($data);
         }
 
+        $properties = isset($data['properties'])
+            ? $data['properties']
+            : [];
+
+        $dependency->setProperties($properties);
+
         $behaviours = isset($data['behaviours'])
             ? $this->generateBehaviours($data['behaviours'])
             : [];

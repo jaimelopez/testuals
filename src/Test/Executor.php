@@ -108,7 +108,13 @@ class Executor extends PHPUnit_Framework_TestCase
                 continue;
             }
 
-            $dependencyObject  = $this->generateSingleArgument($dependency->getClassName());
+            $dependencyObject  = $this->generateResolvedObject($dependency->getClassName());
+
+            if ($dependency->getBehaviours()) {
+                foreach ($dependency->getProperties() as $property => $value) {
+                    $dependencyObject->$property = $this->generateResolvedObject($value);
+                }
+            }
 
             if (!$dependency->getBehaviours()) {
                 $dependencies[] = $dependencyObject;
@@ -140,7 +146,7 @@ class Executor extends PHPUnit_Framework_TestCase
         $arguments = [];
 
         foreach ($objects as $object) {
-            $arguments[] = $this->generateSingleArgument($object);
+            $arguments[] = $this->generateResolvedObject($object);
         }
 
         return $arguments;
@@ -150,7 +156,7 @@ class Executor extends PHPUnit_Framework_TestCase
      * @param mixed $object
      * @return PHPUnit_Framework_MockObject_MockObject|mixed
      */
-    private function generateSingleArgument($object)
+    private function generateResolvedObject($object)
     {
         $objectAnalyzer = new ObjectAnalyzer($object);
 

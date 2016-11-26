@@ -17,6 +17,9 @@ class Dependency
     /** @var string */
     private $className;
 
+    /** @var array */
+    private $properties;
+
     /** @var Behaviour[] */
     private $behaviours;
 
@@ -38,6 +41,24 @@ class Dependency
     public function setClassName($className)
     {
         $this->className = $className;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProperties()
+    {
+        return $this->properties;
+    }
+
+    /**
+     * @param array $properties
+     */
+    public function setProperties($properties)
+    {
+        $this->properties = $properties;
 
         return $this;
     }
