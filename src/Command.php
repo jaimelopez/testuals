@@ -60,7 +60,11 @@ class Command extends CommandBase
      */
     private function getTestsFolder()
     {
-        return realpath(self::DEFAULT_TESTS_FOLDER);
+        if (is_dir($this->path)){
+            return realpath($this->path);
+        }
+
+        return $this->path;
     }
 
     /***
@@ -68,7 +72,7 @@ class Command extends CommandBase
      */
     private function getTestsExtension()
     {
-        return self::DEFAULT_TESTS_EXTENSION;
+        return $this->extension;
     }
 
     /**
