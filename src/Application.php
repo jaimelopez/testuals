@@ -13,13 +13,10 @@ namespace Santa\Testuals;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 
-define('APPLICATION_NAME', 'Testuals');
-define('APPLICATION_VERSION', '0.0.1-beta');
-
 class Application extends BaseApplication
 {
-    const NAME = APPLICATION_NAME;
-    const VERSION = APPLICATION_VERSION;
+    const NAME = 'Testuals';
+    const VERSION = '0.1-Beta';
 
     /**
      * @param InputInterface $input

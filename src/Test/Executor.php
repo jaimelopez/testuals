@@ -56,8 +56,6 @@ class Executor extends PHPUnit_Framework_TestCase
          * $object->$methodName();
          */
 
-        $this->showHeader();
-
         try {
             if ($test->isDisabled()) {
                 $this->showTestResult($test, Test::DISABLED);
@@ -194,21 +192,13 @@ class Executor extends PHPUnit_Framework_TestCase
         }
     }
 
-
-    private function showHeader()
-    {
-        $this->show('');
-        $this->show(sprintf('%s version %s', APPLICATION_NAME, APPLICATION_VERSION));
-        $this->show('');
-    }
-
     /**
      * @param Test $test
      * @param string $status
      */
     private function showTestResult(Test $test, $status)
     {
-        $message = sprintf('@ Executing %s test... [%s]', $test->getName(), $this->formatTestStatus($status));
+        $message = sprintf('# Executing %s test... [%s]', $test->getName(), $this->formatTestStatus($status));
 
         $this->show($message);
     }
