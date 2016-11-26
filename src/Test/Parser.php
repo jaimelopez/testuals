@@ -184,8 +184,6 @@ class Parser
      */
     private function generateExpectations(array $items)
     {
-        $parser = new Expectation\Parser($this->file, $items);
-
-        return $parser->get();
+        return [];
     }
 }

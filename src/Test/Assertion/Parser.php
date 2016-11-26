@@ -41,7 +41,14 @@ class Parser
         foreach ($this->items as $item) {
             $this->validate($item);
 
-            $assertions[] = new Assertion($item['that'], $item['value']);
+            $assertion = new Assertion();
+            $assertion->setThat($item['that']);
+
+            if (isset($item['value'])) {
+                $assertion->setValue($item['value']);
+            }
+
+            $assertions[] = $assertion;
         }
 
         return $assertions;
@@ -52,9 +59,13 @@ class Parser
      */
     private function validate(array $data)
     {
-        $parameters = ['that', 'value'];
+        $requiredParameters = ['that'];
 
-        foreach ($parameters as $parameter) {
+        $validParameters = array_merge([
+            'value'
+        ], $requiredParameters);
+
+        foreach ($requiredParameters as $parameter) {
             if (!key_exists($parameter, $data)) {
                 throw new InvalidArgumentException(
                     sprintf('%s assertion parameter is missing in %s test file', $parameter, $this->file),
@@ -64,7 +75,7 @@ class Parser
         }
 
         foreach ($data as $parameter => $value) {
-            if (!in_array($parameter, $parameters)) {
+            if (!in_array($parameter, $validParameters)) {
                 throw new InvalidArgumentException(sprintf(
                     'Unknown assertion parameter %s in test file %s', $parameter, $this->file
                 ));

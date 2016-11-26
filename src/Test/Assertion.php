@@ -19,16 +19,6 @@ class Assertion
     private $value;
 
     /**
-     * @param string $that
-     * @param mixed $value
-     */
-    public function __construct($that, $value)
-    {
-        $this->that = $that;
-        $this->value = $value;
-    }
-
-    /**
      * @return string
      */
     public function getThat()
@@ -37,10 +27,32 @@ class Assertion
     }
 
     /**
+     * @param string $that
+     * @return Assertion
+     */
+    public function setThat($that)
+    {
+        $this->that = $that;
+
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @param mixed $value
+     * @return Assertion
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
     }
 }
