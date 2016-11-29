@@ -190,9 +190,12 @@ class Executor extends PHPUnit_Framework_TestCase
 
             $assert = \Assert\Assert::that($result);
 
-            $result = !empty($assertValue)
-                ? $assert->$assertThat($assertValue)
-                : $assert->$assertThat();
+            if (!empty($assertValue)) {
+                $assert->$assertThat($assertValue);
+            }
+            else {
+                $assert->$assertThat();
+            }
         }
     }
 
