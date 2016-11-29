@@ -9,7 +9,7 @@ Testuals is an unit test framework designed to simplify your live allowing you t
 You can install Testuals with [Composer](https://getcomposer.org):
 
 ```bash
-$> composer require bin/testuals
+$> composer require santa/testuals
 ```
 
 If you don't have a composer installed globally then you can get Testuals doing:
