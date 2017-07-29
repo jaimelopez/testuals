@@ -25,3 +25,6 @@ After that you'll be able to run Testuals via:
 ```bash
 $> vendor/bin/testuals
 ```
+##Examples
+There are a example project using Testuals:
+https://github.com/jaimelopez/testuals-example
