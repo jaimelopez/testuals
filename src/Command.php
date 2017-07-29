@@ -60,7 +60,7 @@ class Command extends CommandBase
      */
     private function getTestsFolder()
     {
-        if (is_dir($this->path)){
+        if (is_dir($this->path)) {
             return realpath($this->path);
         }
 
