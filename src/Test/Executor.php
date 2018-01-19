@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Santa\Testuals\Test;
+namespace JaimeLopez\Testuals\Test;
 
 use BadMethodCallException;
 use Exception;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use ReflectionClass;
-use Santa\Testuals\ObjectAnalyzer;
-use Santa\Testuals\Test;
+use JaimeLopez\Testuals\ObjectAnalyzer;
+use JaimeLopez\Testuals\Test;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Executor extends PHPUnit_Framework_TestCase

@@ -8,11 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Santa\Testuals\Test\Dependency\Behaviour;
+namespace JaimeLopez\Testuals\Test\Dependency\Behaviour;
 
-use InvalidArgumentException;
-use Santa\Testuals\Test\Dependency;
-use Santa\Testuals\Test\Dependency\Behaviour;
+use JaimeLopez\Testuals\Test\Dependency\Behaviour;
 
 class Parser
 {

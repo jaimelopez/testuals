@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Santa\Testuals;
+namespace JaimeLopez\Testuals;
 
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;

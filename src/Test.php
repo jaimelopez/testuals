@@ -8,11 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Santa\Testuals;
+namespace JaimeLopez\Testuals;
 
-use Santa\Testuals\Test\Assertion;
-use Santa\Testuals\Test\Dependency;
-use Santa\Testuals\Test\Expectation;
+use JaimeLopez\Testuals\Test\Assertion;
+use JaimeLopez\Testuals\Test\Dependency;
+use JaimeLopez\Testuals\Test\Expectation;
 
 class Test
 {

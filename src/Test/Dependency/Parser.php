@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Santa\Testuals\Test\Dependency;
+namespace JaimeLopez\Testuals\Test\Dependency;
 
-use Santa\Testuals\Test\Dependency;
+use JaimeLopez\Testuals\Test\Dependency;
 
 class Parser
 {

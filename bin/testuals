@@ -40,5 +40,5 @@
 
  require COMPOSER_INSTALLATION;
 
- $testuals = new Santa\Testuals\Application();
+ $testuals = new JaimeLopez\Testuals\Application();
  $testuals->run();

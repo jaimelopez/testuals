@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Santa\Testuals\Test;
+namespace JaimeLopez\Testuals\Test;
 
-use Santa\Testuals\Test\Dependency\Behaviour;
+use JaimeLopez\Testuals\Test\Dependency\Behaviour;
 
 class Dependency
 {

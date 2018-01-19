@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Santa\Testuals;
+namespace JaimeLopez\Testuals;
 
-use Santa\Testuals\Test\Executor;
-use Santa\Testuals\Test\Parser;
+use JaimeLopez\Testuals\Test\Executor;
+use JaimeLopez\Testuals\Test\Parser;
 use Symfony\Component\Console\Command\Command as CommandBase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

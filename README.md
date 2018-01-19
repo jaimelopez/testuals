@@ -11,13 +11,13 @@ It was made as a PoC in a single HackDay so there would have a lot of functional
 You can install Testuals with [Composer](https://getcomposer.org):
 
 ```bash
-$> composer require santa/testuals
+$> composer require jaimelopez/testuals
 ```
 
 If you don't have a composer installed globally then you can get Testuals doing:
 ```bash
 $> curl -sS https://getcomposer.org/installer | php
-$> php composer.phar require santa/testuals
+$> php composer.phar require jaimelopez/testuals
 ```
 
 After that you'll be able to run Testuals via:

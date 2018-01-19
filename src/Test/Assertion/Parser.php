@@ -8,10 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Santa\Testuals\Test\Assertion;
+namespace JaimeLopez\Testuals\Test\Assertion;
 
-use InvalidArgumentException;
-use Santa\Testuals\Test\Assertion;
+use JaimeLopez\Testuals\Test\Assertion;
 
 class Parser
 {

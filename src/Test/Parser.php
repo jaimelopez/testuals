@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Santa\Testuals\Test;
+namespace JaimeLopez\Testuals\Test;
 
 use InvalidArgumentException;
-use Santa\Testuals\Test;
+use JaimeLopez\Testuals\Test;
 use Symfony\Component\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 
