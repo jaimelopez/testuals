@@ -1,6 +1,6 @@
 # Testuals
 #### Simple PHP unit tests framework
-Testuals is an unit test framework designed to simplify your live allowing you to define some stupid tests in a simple, understandable and more textual way.
+Testuals is an unit test framework designed to simplify your life allowing you to define some stupid tests in a simple, understandable and more textual way.
 
 It was made as a PoC in a single HackDay so there would have a lot of functionalities to implement and some changes to do.
 
